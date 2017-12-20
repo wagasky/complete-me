@@ -194,6 +194,25 @@ describe('TRIE', () => {
 
       expect(trie.suggest('piz')).to.deep.equal(['pizza', 'pizzle', 'pize', 'pizzeria', 'pizzicato']);
     });
+
+    it('should return multiple prioritized items first in order of popularity', () => {
+      let trie = new Trie();
+      trie.populate(dictionary);
+
+      expect(trie.suggest('piz')).to.deep.equal(['pize', 'pizza', 'pizzeria', 'pizzicato', 'pizzle']);
+
+      trie.select('pizzle');
+      trie.select('pizzle');
+      trie.select('pizzle');
+      trie.select('pizzle');
+      trie.select('pizzicato');
+      trie.select('pizzicato');
+      trie.select('pizzicato');
+      trie.select('pize');
+      trie.select('pize');
+
+      expect(trie.suggest('piz')).to.deep.equal(['pizzle', 'pizzicato', 'pize', 'pizza', 'pizzeria']);
+    });
   });
 
   describe('DELETE', () => {
