@@ -6,6 +6,8 @@ import fs from 'fs';
 const text = "/usr/share/dict/words"
 const dictionary = fs.readFileSync(text).toString().trim().split('\n')
 
+// add to each
+// expect(mergeSort).to.be.a('function');
 
 describe('TRIE', () => {
   let trie;
@@ -101,11 +103,11 @@ describe('SUGGEST', () => {
     expect(trie.suggest('do')).to.deep.equal(['done', 'donuts']);
   });
 
-  // it('should suggest all words matching the phrase parameter (large sample)', () => {
-  //   let trie = new Trie();
-  //   trie.populate(dictionary);
-  //   expect(trie.suggest('piz')).to.deep.equal(['pize', 'pizza', 'pizzeria', 'pizzicato', 'pizzle']);
-  // });
+  it('should suggest all words matching the phrase parameter (large sample)', () => {
+    let trie = new Trie();
+    trie.populate(dictionary);
+    expect(trie.suggest('piz')).to.deep.equal(['pize', 'pizza', 'pizzeria', 'pizzicato', 'pizzle']);
+  });
 
   it('should return empty array if the phrase does not match any words (small sample)', () => {
     let trie = new Trie();
@@ -115,80 +117,30 @@ describe('SUGGEST', () => {
     expect(trie.suggest('!')).to.deep.equal([]);
   });
 
-describe.only('POPULATE', () => {
-  it('should fill the trie with an array of ten words', () => {
-    let trie = new Trie();
-    trie.populate(['a', 'and', 'be', 'for', 'have', 'in', 'not', 'that', 'the', 'to']);
-    expect(trie.count()).to.equal(10);
-  });
+});
 
-  it('should fill the trie with the dictionary imported in this file', () => {
-    let trie = new Trie();
-    trie.populate(dictionary);
-    expect(trie.count()).to.equal(234371);
+  describe('POPULATE', () => {
+    it('should fill the trie with an array of ten words', () => {
+      let trie = new Trie();
+      trie.populate(['dasher', 'dancer', 'prancer', 'vixen', 'comet', 'cupid', 'dunder', 'blixen', 'rudolf', 'santa']);
+      console.log( JSON.stringify(trie, null, 4) );
+      expect(trie.countWords()).to.equal(10);
+    });
+
+    it('should fill the trie with the dictionary imported in this file', () => {
+      let trie = new Trie();
+      trie.populate(dictionary);
+      expect(trie.countWords()).to.equal(234371);
+    });
+
+    it('should return empty array if the phrase does not match any words (large sample)', () => {
+      let trie = new Trie();
+      trie.populate(dictionary);
+      expect(trie.suggest('zzz')).to.deep.equal([]);
+    });
   });
 });
 
-  // it('should return empty array if the phrase does not match any words (large sample)', () => {
-  //   let trie = new Trie();
-  //   trie.populate(dictionary);
 
-  //   expect(trie.suggest('zzz')).to.deep.equal([]);
-  // });
-});
-
-  // describe.only('SUGGEST', () => {
-  //   let trie = new Trie();
-  //   trie.insert('pizza');
-
-    // it('should return null if there are no suggested words', () => {
-
-    // })
-
-    // it('should return null if there are no words in the tree', () => {
-      
-    // })
-
-    // it('should provide all suggested words in an array', () => {
-    //   trie.suggest('piz');
-    //   expect(trie.suggest('piz').to.deep.equal(['pizza']))
-    //   trie.insert('pizzeria');
-    //   expect(trie.suggest('piz').to.deep.equal(['pizza', 'pizzeria']))
-    // })
-
-
-// completion.suggest("piz")
-// => ["pizza"]
-
-// completion.insert("pizzeria")
-
-// completion.suggest("piz")
-// => ["pizza", "pizzeria"]
-
-// completion.suggest('a')
-// => ["apple"]
-
-
-    // it('should be able to insert words at nodes that already exist', () => {
-    //   trie.insert('ape')
-    //   expect(trie.count).to.equal(2);
-    //   expect(trie.root.children['a'].children['p'].children.hasOwnProperty('p')).to.equal(true);
-    //   expect(trie.root.children['a'].children['p'].children.hasOwnProperty('e')).to.equal(true);
-    // })
-
-    // it('should not take in a word that is already in the tree', () => {
-    //   trie.insert('peach')
-    //   expect(trie.count).to.equal(3)
-      
-    //   trie.insert('peach');
-    //   expect(trie.count).to.equal(3)
-
-    //   trie.insert('banana')
-    //   expect(trie.count).to.equal(4)
-      
-    //   trie.insert('banana');
-    //   expect(trie.count).to.equal(4)
-    // })
-  });
 
 
