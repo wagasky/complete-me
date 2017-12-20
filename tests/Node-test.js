@@ -1,25 +1,31 @@
 import { expect } from 'chai';
-import Node from '../scripts/Node.js'
+const Node = require('../lib/Node.js')
 
 describe('NODE', () => {
   let node;
 
   beforeEach(() => {
-    node = new Node('pizza')
+    node = new Node();
   })
 
   it('should be a thing', () => {
-    expect(node).to.exist
-    expect(node.prev).to.equal(null);
+    expect(node).to.exist;
   })
 
-  it('should default next to null', () => {
-    expect(node.left).to.equal(null);
-    expect(node.right).to.equal(null);
+  it('should default letter to null', () => {
+    expect(node.letter).to.equal(null);
   })
 
-  it('should take data and assign it to data prop', () => {
-    expect(node.data).to.equal('pizza')
+  it('should have a default children property of an empty object', () => {
+    expect(node.children).to.deep.equal({});
   })
 
-})
+  it('should have a wordEnd property of false', () => {
+    expect(node.wordEnd).to.equal(false);
+  })
+
+  it('should take in a letter', () => {
+    node = new Node('a');
+    expect(node.letter).to.equal('a');
+  });
+});
