@@ -6,9 +6,6 @@ import fs from 'fs';
 const text = "/usr/share/dict/words"
 const dictionary = fs.readFileSync(text).toString().trim().split('\n')
 
-// add to each
-// expect(mergeSort).to.be.a('function');
-
 describe('TRIE', () => {
   let trie;
   let node;
@@ -34,7 +31,6 @@ describe('TRIE', () => {
     let trie = new Trie();
     trie.insert('apple');
 
-
     it('should have a root node with an a letter child', () => {
       expect(trie.root.children.hasOwnProperty('a')).to.equal(true);
     })
@@ -55,11 +51,12 @@ describe('TRIE', () => {
       expect(trie.root.children['a'].children['p'].children['p'].children['l'].children.hasOwnProperty('e')).to.equal(true);
     })
 
-    // test to make sure that wordend isn't on something like l
-
-
     it('should set the wordEnd property of the last letter to true', () => {
       expect(trie.root.children['a'].children['p'].children['p'].children['l'].children['e'].wordEnd).to.equal(true);
+    })
+
+    it('should set the wordEnd property of the last letter to true', () => {
+      expect(trie.root.children['a'].children['p'].children['p'].children['l'].wordEnd).to.equal(false);
     })
 
     it('should count the number of words in the trie', () => {
@@ -71,9 +68,8 @@ describe('TRIE', () => {
       expect(trie.count).to.equal(2);
       expect(trie.root.children['a'].children['p'].children.hasOwnProperty('p')).to.equal(true);
       expect(trie.root.children['a'].children['p'].children.hasOwnProperty('e')).to.equal(true);
+      expect(trie.root.children['a'].children['p'].children.hasOwnProperty('t')).to.equal(false);
     })
-    // try a completely different letter
-    // 
 
     it('should not take in a word that is already in the tree', () => {
       trie.insert('peach')
@@ -90,54 +86,53 @@ describe('TRIE', () => {
     })
   })
 
-  // write a test for passing in an empty string
+// scrabble
   // do a recursion on each of the 7 letters and see if an individual letter can work
 
-describe('SUGGEST', () => {
-  it('should take in a string and return an array', () => {
-    let trie = new Trie();
-    trie.insert('pizza');
-    expect(trie.suggest('piz')).to.be.array;
+  describe('SUGGEST', () => {
+    it('should take in a string and return an array', () => {
+      let trie = new Trie();
+      trie.insert('pizza');
+      expect(trie.suggest('piz')).to.be.array;
+    });
+
+    it('should suggest all words matching the phrase parameter (small sample)', () => {
+      let trie = new Trie();
+      trie.insert('dead');
+      trie.insert('dirt');
+      trie.insert('done');
+      trie.insert('donuts');
+
+      expect(trie.suggest('d')).to.deep.equal(['dead', 'dirt', 'done', 'donuts']);
+      expect(trie.suggest('do')).to.deep.equal(['done', 'donuts']);
+    });
+
+    it('should suggest all words matching the phrase parameter (large sample)', () => {
+      let trie = new Trie();
+      trie.populate(dictionary);
+      expect(trie.suggest('piz')).to.deep.equal(['pize', 'pizza', 'pizzeria', 'pizzicato', 'pizzle']);
+    });
+
+    it('should return empty array if the phrase does not match any words (small sample)', () => {
+      let trie = new Trie();
+
+      trie.insert('piece');
+      trie.insert('pizza');
+      expect(trie.suggest('!')).to.deep.equal([]);
+    });
   });
-
-  it('should suggest all words matching the phrase parameter (small sample)', () => {
-    let trie = new Trie();
-    trie.insert('dead');
-    trie.insert('dirt');
-    trie.insert('done');
-    trie.insert('donuts');
-
-
-
-    expect(trie.suggest('d')).to.deep.equal(['dead', 'dirt', 'done', 'donuts']);
-    expect(trie.suggest('do')).to.deep.equal(['done', 'donuts']);
-  });
-
-  it('should suggest all words matching the phrase parameter (large sample)', () => {
-    let trie = new Trie();
-    trie.populate(dictionary);
-    expect(trie.suggest('piz')).to.deep.equal(['pize', 'pizza', 'pizzeria', 'pizzicato', 'pizzle']);
-  });
-
-  it('should return empty array if the phrase does not match any words (small sample)', () => {
-    let trie = new Trie();
-    trie.insert('piece');
-    trie.insert('pizza');
-
-    expect(trie.suggest('!')).to.deep.equal([]);
-  });
-
-});
 
   describe('POPULATE', () => {
     it('should fill the trie with an array of ten words', () => {
       let trie = new Trie();
+
       trie.populate(['dasher', 'dancer', 'prancer', 'vixen', 'comet', 'cupid', 'dunder', 'blitzen', 'rudolf', 'santa']);
       expect(trie.countWords).to.equal(10);
     });
 
     it('should fill the trie with the dictionary imported in this file', () => {
       let trie = new Trie();
+
       trie.populate(dictionary);
       expect(trie.countWords).to.equal(234371);
     });
@@ -151,7 +146,7 @@ describe('SUGGEST', () => {
   });
 
   describe('SELECT', () => {
-    it('should update the value of the Node property popularity', () => {
+    it('should start with a popularity of zero', () => {
       let trie = new Trie();
 
       trie.insert('hey');
@@ -162,12 +157,20 @@ describe('SUGGEST', () => {
       expect(trie.root.children['h'].children['e'].children['y'].popularity).to.equal(2);
     });
 
-    // should start with a popularity of 0
-    //     // should increase in popularity every time it's selected
+    it('should increase popularity every time it is selected', () => {
+      let trie = new Trie();
 
+      trie.insert('hey');
+      expect(trie.root.children['h'].children['e'].children['y'].popularity).to.equal(0);
+      trie.select('hey');
+      expect(trie.root.children['h'].children['e'].children['y'].popularity).to.equal(1);
+      trie.select('hey');
+      expect(trie.root.children['h'].children['e'].children['y'].popularity).to.equal(2);
+    });
 
     it('should return prioritized items first when returning suggestions array (small sample)', () => {
       let trie = new Trie();
+
       trie.insert('dog');
       trie.insert('dingo');
       trie.insert('doppler');
