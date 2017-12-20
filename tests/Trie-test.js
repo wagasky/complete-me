@@ -204,7 +204,7 @@ describe('SUGGEST', () => {
       expect(trie.root.children['h'].children['e'].children['y'].wordEnd).to.equal(false);
     });
 
-    it('should only return suggestions that were not delted', () => {
+    it('should only return suggestions that were not deleted', () => {
       let trie = new Trie();
       trie.insert('hey');
       trie.insert('hello');
