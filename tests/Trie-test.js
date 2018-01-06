@@ -30,6 +30,7 @@ describe('TRIE', () => {
   describe('INSERT', () => {
     let trie = new Trie();
     trie.insert('apple');
+    console.log( JSON.stringify(trie, null, 4) );
 
     it('should have a root node with an a letter child', () => {
       expect(trie.root.children.hasOwnProperty('a')).to.equal(true);
